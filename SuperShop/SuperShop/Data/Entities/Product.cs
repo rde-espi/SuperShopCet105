@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SuperShop.Data.Entities
 {
-    public class Product:IEntity
+    public class Product : IEntity
     {
         public int Id { get; set; }
         [Required]
-        [MaxLength(50,ErrorMessage ="The field {0} must have less than 50 characters")]
+        [MaxLength(50, ErrorMessage = "The field {0} must have less than 50 characters")]
         public string Name { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
@@ -38,7 +38,7 @@ namespace SuperShop.Data.Entities
             {
                 if (string.IsNullOrEmpty(ImageUrl))
                 {
-                    return null;
+                    return "~/images/noimage.jpg";
                 }
 
                 return $"https://localhost:44320{ImageUrl.Substring(1)}";

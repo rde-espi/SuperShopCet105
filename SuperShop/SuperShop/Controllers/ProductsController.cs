@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperShop.Data;
-using SuperShop.Data.Entities;
 using SuperShop.Helpers;
 using SuperShop.Models;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -131,7 +129,7 @@ namespace SuperShop.Controllers
 
                     }
 
-                    var product = this.ToProduct(model, path);
+                    var product = _converterHelper.ToProduct(model, path, false);
                     var producs = _converterHelper.ToProduct(model, path, false);
 
 
@@ -154,10 +152,7 @@ namespace SuperShop.Controllers
             return View(model);
         }
 
-        private Product ToProduct(ProductViewModel model, string path)
-        {
-            throw new NotImplementedException();
-        }
+
 
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
