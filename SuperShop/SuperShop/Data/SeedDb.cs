@@ -25,9 +25,12 @@ namespace SuperShop.Data
         {
             await _context.Database.EnsureCreatedAsync();
 
+            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Custumer");
+
             var user = await _userHelper.GetUserByEmailAsync("reinaldo_7531@hotmail.com");
 
-            if(user == null)
+            if (user == null)
             {
                 user = new User
                 {
@@ -38,32 +41,39 @@ namespace SuperShop.Data
                     PhoneNumber = "912345678"
                 };
 
-                var result = await _userHelper.AddUserAsync(user,"123456");
-                if(result != IdentityResult.Success)
+                var result = await _userHelper.AddUserAsync(user, "123456");
+                if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
+            }
+            var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
+            if (!isInRole)
+            {
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
+
             }
 
             if (!_context.Products.Any())
             {
-                AddProduct("Iphone X",user);
-                AddProduct("Magic Mouse",user);
-                AddProduct("IWatch series 4",user);
-                AddProduct("Ipad Mini",user);
+                AddProduct("Iphone X", user);
+                AddProduct("Magic Mouse", user);
+                AddProduct("IWatch series 4", user);
+                AddProduct("Ipad Mini", user);
                 await _context.SaveChangesAsync();
             }
         }
 
-        private async Task AddProduct(string name,User user)
+        private async Task AddProduct(string name, User user)
         {
             _context.Products.Add(new Product
             {
                 Name = name,
-                Price= _random.Next(1000),
-                IsAvailable= true,
-                Stock= _random.Next(100),
-                User= user
+                Price = _random.Next(1000),
+                IsAvailable = true,
+                Stock = _random.Next(100),
+                User = user
             });
         }
     }
